@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>top.seiei</groupId>
+    <artifactId>foodie</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <!--
+        子模块集合
+        在Maven build 当前父模块的时候，它会根据子模块的相互依赖关系整理一个build顺序，然后依次build。
+    -->
+    <modules>
+        <module>foodie-common</module>
+        <module>foodie-pojo</module>
+        <module>foodie-mapper</module>
+        <module>foodie-service</module>
+        <module>foodie-api</module>
+    </modules>
+
+    <!--
+        1、聚合工程里可以分为顶级项目（顶级工程、父工程）与子工程，子工程在 maven 里称为模块（module）,模块之间是平级的，是可以相互依赖的
+        2、子模块可以使用顶级工程里所有的资源（依赖），子模块之间如果要使用资源，必须构建依赖
+        3、一个顶级工程是可以由多个不同的子工程构成
+    -->
+    <packaging>pom</packaging>
+
+    <!--
+        <parent> 标签表示：依赖对应标签项目所对应的jar包依赖，但不引入标签项目的 java文件等
+        <dependency> 标签表示：依赖标签项目所对应的所有内容，包括 jar包依赖，标签项目的 java文件等
+        spring-boot-starter-parent 是 SpringBoot 的父级依赖
+        按着 ctrl 点击 spring-boot-starter-parent，可以查看到它还有一个父级依赖 spring-boot-dependencies，再点击查看
+        这个 spring-boot-dependencies 默认加载了很多的依赖，起一个依赖管理作用
+    -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.5.RELEASE</version>
+        <relativePath />
+    </parent>
+    <!--
+        资源属性
+    -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+    </properties>
+
+    <!--
+        这里的 dependency 无需定义 version，version 全部由 spring-boot-starter-parent 定义管理
+    -->
+    <dependencies>
+        <!-- Spring Boot -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <!-- 排除相应的默认日志 jar 包 -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- Spring 容器的 web 模块 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- SpringBoot 配置解析默认只能解析yml文件，想要解析xml，properties 格式文件就需要使用这个依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- mysql驱动 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.11</version>
+        </dependency>
+        <!-- mybatis -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+        <!-- 通用mapper逆向工具 -->
+        <dependency>
+            <groupId>tk.mybatis</groupId>
+            <artifactId>mapper-spring-boot-starter</artifactId>
+            <version>2.1.5</version>
+        </dependency>
+    </dependencies>
+</project>
