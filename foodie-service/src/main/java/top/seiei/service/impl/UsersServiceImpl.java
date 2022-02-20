@@ -25,7 +25,6 @@ public class UsersServiceImpl implements UsersService {
     @Resource
     private Sid sid;
 
-
     // 默认头像路径
     private static final String USER_FACE = "";
 
@@ -58,5 +57,16 @@ public class UsersServiceImpl implements UsersService {
         user.setUpdatedTime(new Date());
         usersMappper.insert(user);
         return user;
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public Users queryUserForLogin(String userName, String password) throws Exception {
+        Example example = new Example(Users.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("username", userName);
+        criteria.andEqualTo("password", MD5Utils.getMD5Str(password));
+        Users result = usersMappper.selectOneByExample(example);
+        return result;
     }
 }

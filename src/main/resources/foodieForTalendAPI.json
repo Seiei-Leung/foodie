@@ -1,0 +1,97 @@
+{
+  "version": 6,
+  "entities": [
+    {
+      "entity": {
+        "type": "Project",
+        "id": "7d63906f-63eb-42d0-ba8c-a4847fe73d35",
+        "name": "foodie"
+      },
+      "children": [
+        {
+          "entity": {
+            "type": "Scenario",
+            "id": "033c27db-1f05-486e-9ae3-6ed660387214",
+            "name": "用户模块"
+          },
+          "children": [
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": [
+                      {
+                        "enabled": true,
+                        "name": "userName",
+                        "value": "Seiei"
+                      }
+                    ]
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost:8088",
+                  "path": "/passport/userNameIsExist"
+                },
+                "id": "044e5d8c-4091-459c-9679-6355cf6b020a",
+                "name": "检查用户名是否重复",
+                "headers": []
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+                  "name": "POST"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n  \"userName\":\"seiei\",\n  \"password\":\"123456\",\n  \"confirmPassword\":\"123456\"\n}"
+                },
+                "uri": {
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost:8088",
+                  "path": "/passport/regist"
+                },
+                "id": "89d63838-d539-4521-9728-0bb81687db17",
+                "name": "注册用户",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

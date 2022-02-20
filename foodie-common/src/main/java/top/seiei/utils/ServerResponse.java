@@ -2,14 +2,20 @@ package top.seiei.utils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@ApiModel(value = "返回信息VO", description = "所有响应都会返回这个ServerResponse对象")
 public class ServerResponse<T> implements Serializable {
 
+    @ApiModelProperty(value = "返回信息数据")
     private T data;
+    @ApiModelProperty(value = "返回信息状态码")
     private int status;
+    @ApiModelProperty(value = "返回信息文本")
     private String msg;
     public T getData() {
         return data;

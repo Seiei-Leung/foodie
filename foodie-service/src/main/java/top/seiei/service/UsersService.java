@@ -19,5 +19,11 @@ public interface UsersService {
      */
     public Users createUser(UserBO userBO) throws Exception;
 
-
+    /**
+     * 检索用户名和密码是否匹配，用于登录
+     * @param userName 用户名
+     * @param password 密码
+     * @return
+     */
+    public Users queryUserForLogin(String userName, String password) throws Exception;
 }
