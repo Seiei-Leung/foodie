@@ -9,15 +9,18 @@ import top.seiei.service.impl.TestTransServiceImpl;
 
 import javax.annotation.Resource;
 
-@RunWith(SpringRunner.class)
+// 不注释的话，每次 maven install 都会跑一遍 Test
+// 声明使用 Spring
+//@RunWith(SpringRunner.class)
 // 引入 SpringBoot 启动类
-@SpringBootTest(classes = Application.class)
+//@SpringBootTest(classes = Application.class)
 public class TransTest {
 
     @Resource
     private TestTransServiceImpl testTransService;
 
-    @Test
+    // 运行 Test 入口
+    //@Test
     public void testForTransactional() {
         testTransService.testForTransactional();
     }

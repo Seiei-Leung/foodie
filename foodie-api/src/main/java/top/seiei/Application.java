@@ -2,6 +2,7 @@ package top.seiei;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import tk.mybatis.spring.annotation.MapperScan;
 
 /**
@@ -12,6 +13,11 @@ import tk.mybatis.spring.annotation.MapperScan;
  * 其中 @EnableAutoConfiguration 则表示自动装配备用的、默认的配置（tomcat、springMVC 之类的配置）,帮我们自动装配（为什么使用SpringBoot就可以做到几乎零配置）
  */
 @SpringBootApplication
+/**
+ * 扫描所有包，以及相关组件包
+ * 不添加 @ComponentScan 注释，就只会默认扫描 top.seiei 包
+ */
+@ComponentScan(basePackages = {"top.seiei", "org.n3r.idworker"})
 /**
  *  扫描 mapper
  */
