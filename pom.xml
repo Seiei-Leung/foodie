@@ -37,6 +37,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.1.5.RELEASE</version>
+        <!-- <relativePath/>设定一个空值默认值为../pom.xml 表示将始终从父级仓库中获取，不从本地路径获取 -->
         <relativePath />
     </parent>
     <!--
@@ -68,6 +69,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- Spring 的 aop 模块 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
         <!-- SpringBoot 配置解析默认只能解析yml文件，想要解析xml，properties 格式文件就需要使用这个依赖 -->
         <dependency>
@@ -129,6 +135,17 @@
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-spring-ui</artifactId>
             <version>2.0.1</version>
+        </dependency>
+        <!--引入日志依赖 抽象层 与 实现层-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.21</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.21</version>
         </dependency>
     </dependencies>
 </project>

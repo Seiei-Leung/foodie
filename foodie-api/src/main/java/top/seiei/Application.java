@@ -19,7 +19,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  */
 @ComponentScan(basePackages = {"top.seiei", "org.n3r.idworker"})
 /**
- *  扫描 mapper
+ *  扫描 DAO 文件
  */
 @MapperScan(basePackages = "top.seiei.mapper")
 public class Application {

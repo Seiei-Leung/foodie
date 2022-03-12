@@ -21,7 +21,7 @@ public class CorsConfig {
         // 设置允许跨域访问的前端 url
         corsConfiguration.addAllowedOrigin("http://localhost:8080");
 
-        // 设置允许发送 Cookie 信息
+        // 设置允许发送 Cookie 信息，前端也是需要配置允许发送 Cookie 信息
         corsConfiguration.setAllowCredentials(true);
 
         // 设置允许请求的方式
