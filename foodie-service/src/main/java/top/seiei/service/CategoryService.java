@@ -6,7 +6,7 @@ import top.seiei.pojo.vo.NewItemsVO;
 
 import java.util.List;
 
-public interface CategorySerivce {
+public interface CategoryService {
 
     /**
      * 获取顶级级别的大分类

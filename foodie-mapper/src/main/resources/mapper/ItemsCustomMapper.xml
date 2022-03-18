@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="top.seiei.mapper.ItemsCustomMapper" >
+    <select id="searchItems" parameterType="Map" resultType="top.seiei.pojo.vo.SearchItemsVO">
+        SELECT
+        i.id as itemId,
+        i.item_name as itemName,
+        i.sell_counts as sellCounts,
+        ii.url as imgUrl,
+        tempSpec.price_discount as price
+        from items i
+        left JOIN
+        items_img ii
+        on i.id = ii.item_id
+        left JOIN
+        (select item_id, MIN(price_discount) as price_discount
+        from items_spec GROUP BY item_id) tempSpec
+        on i.id = tempSpec.item_id
+        where
+        ii.is_main = 1
+        <if test="keyWords != null and keyWords != ''">
+            and i.item_name like '%${keyWords}%'
+        </if>
+        order by
+        /* 排序：
+        sort 为 c 时，表示销量排序
+        sort 为 p 时，表示价格排序
+        sort 为 k 时，表示默认排序
+        字符串做比较的时候，要注意单引号的使用，
+        加单引号 mybatis 会认为 String 和 char 比较，从而报错
+        解决方法如下
+        */
+        <choose>
+            <when test="sort == 'c'.toString()">
+                i.sell_counts desc
+            </when>
+            <when test='sort == "p"'>
+                tempSpec.price_discount desc
+            </when>
+            <otherwise>
+                i.item_name asc
+            </otherwise>
+        </choose>
+    </select>
+    <select id="searchItemsByCatId" parameterType="Map" resultType="top.seiei.pojo.vo.SearchItemsVO">
+        SELECT
+        i.id as itemId,
+        i.item_name as itemName,
+        i.sell_counts as sellCounts,
+        ii.url as imgUrl,
+        tempSpec.price_discount as price
+        from items i
+        left JOIN
+        items_img ii
+        on i.id = ii.item_id
+        left JOIN
+        (select item_id, MIN(price_discount) as price_discount
+        from items_spec GROUP BY item_id) tempSpec
+        on i.id = tempSpec.item_id
+        where
+        ii.is_main = 1
+        and
+        i.cat_id = #{catId}
+        order by
+        <choose>
+            <when test="sort == 'c'.toString()">
+                i.sell_counts desc
+            </when>
+            <when test='sort == "p"'>
+                tempSpec.price_discount desc
+            </when>
+            <otherwise>
+                i.item_name asc
+            </otherwise>
+        </choose>
+    </select>
+    <select id="getItemsBySpecIds" resultType="top.seiei.pojo.vo.ShopCartVO" parameterType="List">
+        select
+        i.id as itemId,
+        i.item_name as itemName,
+        ii.url as itemImgUrl,
+        t_items_spec.id as specId,
+        t_items_spec.`name` as specName,
+        t_items_spec.price_discount as priceDiscount,
+        t_items_spec.price_normal as priceNormal
+        from
+        items_spec t_items_spec
+        LEFT JOIN
+        items i
+        ON
+        i.id = t_items_spec.item_id
+        LEFT JOIN
+        items_img ii
+        ON
+        ii.item_id = i.id
+        WHERE
+        ii.is_main = 1
+        and
+        t_items_spec.id in
+        <foreach collection="specIds" item="specId" index="index" open="(" separator="," close=")">
+            #{specId}
+        </foreach>
+    </select>
+    <update id="decreaseItemSpecStock" parameterType="Map">
+        update items_spec
+        set
+        stock = stock - #{pendingCounts}
+        where
+        id = #{specId}
+        and
+        stock >= #{pendingCounts}
+    </update>
+</mapper>

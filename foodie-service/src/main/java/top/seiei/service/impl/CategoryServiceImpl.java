@@ -9,13 +9,13 @@ import top.seiei.mapper.CategoryMapper;
 import top.seiei.pojo.Category;
 import top.seiei.pojo.vo.CategoryVO;
 import top.seiei.pojo.vo.NewItemsVO;
-import top.seiei.service.CategorySerivce;
+import top.seiei.service.CategoryService;
 
 import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class CategorySerivceImpl implements CategorySerivce {
+public class CategoryServiceImpl implements CategoryService {
 
     @Resource
     private CategoryMapper categoryMapper;

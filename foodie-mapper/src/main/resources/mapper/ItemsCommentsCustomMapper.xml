@@ -1,19 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="top.seiei.mapper.ItemsCommentsCustomMapper" >
-  <resultMap id="BaseResultMap" type="top.seiei.pojo.ItemsComments" >
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" property="id" jdbcType="VARCHAR" />
-    <result column="user_id" property="userId" jdbcType="VARCHAR" />
-    <result column="item_id" property="itemId" jdbcType="VARCHAR" />
-    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
-    <result column="item_spec_id" property="itemSpecId" jdbcType="VARCHAR" />
-    <result column="sepc_name" property="sepcName" jdbcType="VARCHAR" />
-    <result column="comment_level" property="commentLevel" jdbcType="INTEGER" />
-    <result column="content" property="content" jdbcType="VARCHAR" />
-    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
-    <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
-  </resultMap>
+  <select id="getCommentLevelCountsVOByItemId" resultType="top.seiei.pojo.vo.CommentLevelCountsVO" parameterType="String">
+    select
+      sum(case when comment_level='1' then 1 else 0 end) as goodCounts,
+      sum(case when comment_level='2' then 1 else 0 end) as normalCounts,
+      sum(case when comment_level='3' then 1 else 0 end) as badCounts,
+      count(item_id) as totalCounts
+    from
+      items_comments
+    where
+      item_id = #{itemId}
+  </select>
+  <select id="getCommentVOByItemIdAndCommentLevel" resultType="top.seiei.pojo.vo.CommentVO" parameterType="Map">
+    select
+    ic.comment_level as commentLevel,
+    ic.content as content,
+    ic.sepc_name as sepcName,
+    ic.created_time as createdTime,
+    u.face as userFace,
+    u.nickname as nickName
+    from
+    items_comments ic
+    left join
+    users u
+    on ic.user_id = u.id
+    where
+    ic.item_id = #{itemId}
+    <if test="commentLevel != null">
+      and
+      ic.comment_level = #{commentLevel}
+    </if>
+  </select>
 </mapper>

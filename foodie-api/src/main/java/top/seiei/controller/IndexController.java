@@ -11,7 +11,7 @@ import top.seiei.pojo.Category;
 import top.seiei.pojo.vo.CategoryVO;
 import top.seiei.pojo.vo.NewItemsVO;
 import top.seiei.service.CarouselService;
-import top.seiei.service.CategorySerivce;
+import top.seiei.service.CategoryService;
 import top.seiei.utils.ServerResponse;
 
 import javax.annotation.Resource;
@@ -27,7 +27,7 @@ public class IndexController {
     private CarouselService carouselService;
 
     @Resource
-    private CategorySerivce categorySerivce;
+    private CategoryService categoryService;
 
     /**
      * 首页获取轮播图信息列表
@@ -47,7 +47,7 @@ public class IndexController {
     @ApiOperation(value = "获取顶级级别的大分类", notes = "首页获取顶级级别的大分类", httpMethod = "GET")
     @GetMapping("/cats")
     public ServerResponse getRootLevelCategory() {
-        List<Category> result = categorySerivce.getRootLevelCategory();
+        List<Category> result = categoryService.getRootLevelCategory();
         return ServerResponse.createdBySuccess(result);
     }
 
@@ -64,7 +64,7 @@ public class IndexController {
         if (rootCatId == null) {
             return ServerResponse.createdByError("参数不能为空");
         }
-        List<CategoryVO> result = categorySerivce.getSubCategoryList(rootCatId);
+        List<CategoryVO> result = categoryService.getSubCategoryList(rootCatId);
         return ServerResponse.createdBySuccess(result);
     }
 
@@ -81,7 +81,7 @@ public class IndexController {
         if (rootCatId == null) {
             return ServerResponse.createdByError("参数不能为空");
         }
-        List<NewItemsVO> result = categorySerivce.getSixNewItemsLazy(rootCatId);
+        List<NewItemsVO> result = categoryService.getSixNewItemsLazy(rootCatId);
         return ServerResponse.createdBySuccess(result);
     }
 

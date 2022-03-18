@@ -35,11 +35,10 @@ public class PassportController {
      * @return
      */
     @ApiOperation(value = "用户名是否存在", notes = "参数不能为空", httpMethod = "GET")
-    @ApiImplicitParams(
-            @ApiImplicitParam(value = "用户名", name = "userName", example = "Seiei", required = true)
-    )
     @GetMapping("/userNameIsExist")
-    public ServerResponse userNameIsExist(@RequestParam String userName) {
+    public ServerResponse userNameIsExist(
+            @ApiParam(name = "userName", value = "用户名", example = "Seiei", required = true)
+            @RequestParam String userName) {
         if (StringUtils.isBlank(userName)) {
             return ServerResponse.createdByError("用户名不能为空！");
         }
@@ -90,6 +89,9 @@ public class PassportController {
             e.printStackTrace();
             return ServerResponse.createdByError("保存信息时发生错误");
         }
+        // todo 生产用户token，存入 redis 会话
+        // todo 同步购物车数据（指的是前端 cookie 购物车信息的更新吗）
+
         return ServerResponse.createdBySuccess();
     }
 
@@ -121,6 +123,9 @@ public class PassportController {
 
             // 配置Cookie
             CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(result), true);
+
+            // todo 生产用户token，存入 redis 会话
+            // todo 同步购物车数据（指的是前端 cookie 购物车信息的更新吗）
 
             return ServerResponse.createdBySuccess(result);
         } catch (Exception e) {

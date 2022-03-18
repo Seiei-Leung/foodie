@@ -13,6 +13,9 @@
       <result column="subFatherId" property="subFatherId"/>
     </collection>
   </resultMap>
+  <!--
+    可以直接使用 resultType="top.seiei.pojo.vo.CategoryVO"
+  -->
   <select id="getSubCategoryList" resultMap="CategoryVOMap" parameterType="Integer">
     select
     father.id as id,

@@ -2,6 +2,9 @@ package top.seiei.pojo.vo;
 
 import java.util.List;
 
+/*
+* 首页推荐商品显示
+* */
 public class NewItemsVO {
 
     private Integer rootCatId;

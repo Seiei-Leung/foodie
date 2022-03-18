@@ -40,11 +40,11 @@ public class ServiceLogAspect {
         long takeTime = end - begin;
 
         if (takeTime > 3000) {
-            logger.error("====== 执行结束，耗时：{}毫秒 ======", takeTime);
+            logger.error("====== {}.{} 执行结束，耗时：{}毫秒 ======", joinPoint.getTarget().getClass(), joinPoint.getSignature().getName(), takeTime);
         } else if (takeTime > 2000) {
-            logger.warn("====== 执行结束，耗时：{}毫秒 ======", takeTime);
+            logger.warn("====== {}.{} 执行结束，耗时：{}毫秒 ======", joinPoint.getTarget().getClass(), joinPoint.getSignature().getName(), takeTime);
         } else {
-            logger.info("====== 执行结束，耗时：{}毫秒 ======", takeTime);
+            logger.info("====== {}.{} 执行结束，耗时：{}毫秒 ======", joinPoint.getTarget().getClass(), joinPoint.getSignature().getName(), takeTime);
         }
 
         return result;

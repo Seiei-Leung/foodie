@@ -3,6 +3,7 @@ package top.seiei;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import tk.mybatis.spring.annotation.MapperScan;
 
 /**
@@ -14,14 +15,18 @@ import tk.mybatis.spring.annotation.MapperScan;
  */
 @SpringBootApplication
 /**
+ *  扫描 DAO 文件
+ */
+@MapperScan(basePackages = "top.seiei.mapper")
+/**
  * 扫描所有包，以及相关组件包
  * 不添加 @ComponentScan 注释，就只会默认扫描 top.seiei 包
  */
 @ComponentScan(basePackages = {"top.seiei", "org.n3r.idworker"})
 /**
- *  扫描 DAO 文件
+ *
  */
-@MapperScan(basePackages = "top.seiei.mapper")
+@EnableScheduling
 public class Application {
 
     public static void main(String[] args) {
