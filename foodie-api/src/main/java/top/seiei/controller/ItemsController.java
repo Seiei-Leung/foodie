@@ -73,8 +73,12 @@ public class ItemsController extends BaseController{
     }
 
     /**
+     *
      * 根据商品主键获取商品评价的总数（分级别计算）
      * @param itemId 商品主键
+     * @param level 评价级别
+     * @param page 当前页数
+     * @param pageSize 每页个数
      * @return
      */
     @ApiOperation(value = "根据商品主键获取商品评价详情列表（可传入评价级别筛选）", httpMethod = "GET")

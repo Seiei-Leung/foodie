@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.seiei.mapper.ItemsCommentsCustomMapper;
 import top.seiei.pojo.vo.CommentVO;
 import top.seiei.pojo.vo.PagedGridResult;
+import top.seiei.service.BaseService;
 import top.seiei.service.ItemsCommentsService;
 import top.seiei.utils.DesensitizationUtil;
 
@@ -15,7 +16,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class ItemsCommentsServiceImpl implements ItemsCommentsService {
+public class ItemsCommentsServiceImpl extends BaseService implements ItemsCommentsService {
 
     @Resource
     private ItemsCommentsCustomMapper itemsCommentsCustomMapper;
@@ -30,13 +31,6 @@ public class ItemsCommentsServiceImpl implements ItemsCommentsService {
         for (CommentVO vo : commentVOList) {
             vo.setNickName(DesensitizationUtil.commonDisplay(vo.getNickName()));
         }
-        // PageInfo<?> pageInfo = new PageInfo<>(commentVOList);
-        PageInfo<CommentVO> pageInfo = new PageInfo<>(commentVOList);
-        PagedGridResult<List<CommentVO>> pagedGridResult = new PagedGridResult<List<CommentVO>>();
-        pagedGridResult.setRows(commentVOList);
-        pagedGridResult.setPage(page);
-        pagedGridResult.setTotal(pageInfo.getPages());
-        pagedGridResult.setRecords(pageInfo.getTotal());
-        return pagedGridResult;
+        return this.setPagedGridResult(commentVOList, page);
     }
 }

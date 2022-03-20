@@ -119,7 +119,7 @@ public class OrderServiceImpl implements OrderService {
         OrderStatus orderStatus = new OrderStatus();
         orderStatus.setOrderId(orderId);
         orderStatus.setPayTime(new Date());
-        orderStatus.setOrderStatus(OrderStatusEnum.WAIT_PAY.type);
+        orderStatus.setOrderStatus(OrderStatusEnum.WAIT_DELIVER.type);
         orderStatusMapper.updateByPrimaryKeySelective(orderStatus);
     }
 

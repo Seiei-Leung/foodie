@@ -32,4 +32,54 @@
       ic.comment_level = #{commentLevel}
     </if>
   </select>
+  <insert id="saveComments" parameterType="Map">
+    insert into items_comments
+    (
+      id,
+      user_id,
+      item_id,
+      item_name,
+      item_spec_id,
+      sepc_name,
+      comment_level,
+      content,
+      created_time,
+      updated_time
+    )
+    values 
+    <foreach collection="commentList" item="item" separator=",">
+      (
+        #{item.commentId},
+        #{userId},
+        #{item.itemId},
+        #{item.itemName},
+        #{item.itemSpecId},
+        #{item.itemSpecName},
+        #{item.commentLevel},
+        #{item.content},
+        now(),
+        now()
+      )
+    </foreach>
+  </insert>
+  <select id="getCommentListByUserId" parameterType="String" resultType="top.seiei.pojo.vo.center.MyCommentVO">
+      SELECT
+        ic.id as commentId,
+        ic.content as content,
+        ic.created_time as createdTime,
+        ic.item_id as itemId,
+        ic.item_name as itemName,
+        ic.sepc_name as sepcName,
+        oi.item_img as itemImg
+      FROM
+        items_comments ic
+      LEFT JOIN
+        order_items oi
+      ON
+        ic.item_id = oi.item_id
+      WHERE
+        ic.user_id = #{userId}
+      ORDER BY
+        ic.created_time
+  </select>
 </mapper>

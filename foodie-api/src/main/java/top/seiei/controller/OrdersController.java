@@ -52,7 +52,7 @@ public class OrdersController {
 
         // 发送信息到支付中心
         // 执行 post 逻辑
-        Integer result = restTemplate.postForObject("localhost:8088/orders/notifyMerchantOrderPaid?orderId=" + orderId, null, Integer.class);
+        Integer result = restTemplate.postForObject("http://localhost:8088/orders/notifyMerchantOrderPaid?orderId=" + orderId, null, Integer.class);
 
         return ServerResponse.createdBySuccess(orderId);
     }

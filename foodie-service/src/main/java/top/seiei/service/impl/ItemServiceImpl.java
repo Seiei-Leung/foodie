@@ -15,6 +15,7 @@ import top.seiei.pojo.vo.CommentLevelCountsVO;
 import top.seiei.pojo.vo.PagedGridResult;
 import top.seiei.pojo.vo.SearchItemsVO;
 import top.seiei.pojo.vo.ShopCartVO;
+import top.seiei.service.BaseService;
 import top.seiei.service.ItemService;
 
 import javax.annotation.Resource;
@@ -23,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-public class ItemServiceImpl implements ItemService {
+public class ItemServiceImpl extends BaseService implements ItemService {
 
     @Resource
     private ItemsMapper itemsMapper;
@@ -90,13 +91,7 @@ public class ItemServiceImpl implements ItemService {
     public PagedGridResult<List<SearchItemsVO>> searchItems(String keyWords, String sort, Integer page, Integer pageSize) {
         PageHelper.startPage(page, pageSize);
         List<SearchItemsVO> searchItemsVOList = itemsCustomMapper.searchItems(keyWords, sort);
-        PageInfo<?> pageInfo = new PageInfo<>(searchItemsVOList);
-        PagedGridResult<List<SearchItemsVO>> pagedGridResult = new PagedGridResult<List<SearchItemsVO>>();
-        pagedGridResult.setRows(searchItemsVOList);
-        pagedGridResult.setPage(page);
-        pagedGridResult.setTotal(pageInfo.getPages());
-        pagedGridResult.setRecords(pageInfo.getTotal());
-        return pagedGridResult;
+        return this.setPagedGridResult(searchItemsVOList, page);
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
@@ -104,13 +99,7 @@ public class ItemServiceImpl implements ItemService {
     public PagedGridResult<List<SearchItemsVO>> searchItems(Integer catId, String sort, Integer page, Integer pageSize) {
         PageHelper.startPage(page, pageSize);
         List<SearchItemsVO> searchItemsVOList = itemsCustomMapper.searchItemsByCatId(catId, sort);
-        PageInfo<?> pageInfo = new PageInfo<>(searchItemsVOList);
-        PagedGridResult<List<SearchItemsVO>> pagedGridResult = new PagedGridResult<List<SearchItemsVO>>();
-        pagedGridResult.setRows(searchItemsVOList);
-        pagedGridResult.setPage(page);
-        pagedGridResult.setTotal(pageInfo.getPages());
-        pagedGridResult.setRecords(pageInfo.getTotal());
-        return pagedGridResult;
+        return this.setPagedGridResult(searchItemsVOList, page);
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)

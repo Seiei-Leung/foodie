@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="top.seiei.mapper.OrdersCustomMapper" >
+  <resultMap id="BaseResultMap" type="top.seiei.pojo.vo.center.MyOrderVO" >
+      <id column="orderId" property="orderId"/>
+      <result column="createdTime" property="createdTime"/>
+      <result column="payMethod" property="payMethod"/>
+      <result column="realPayAmount" property="realPayAmount"/>
+      <result column="postAmount" property="postAmount"/>
+      <result column="orderStatus" property="orderStatus"/>
+      <result column="isComment" property="isComment"/>
+      <!--
+            使用 myBatis 的 select 属性用以嵌套查询，column 属性用以传入参数，
+            如果使用之前的方式查询，pageHelper 插件会出错
+      -->
+      <collection property="subOrderItemList"
+                  select="getSubMyOrderVOs"
+                  column="orderId"
+                  ofType="top.seiei.pojo.vo.center.SubMyOrderVO">
+          <id column="itemId" property="itemId"/>
+          <result column="itemName" property="itemName"/>
+          <result column="itemImg" property="itemImg"/>
+          <result column="itemSpecName" property="itemSpecName"/>
+          <result column="buyCounts" property="buyCounts"/>
+          <result column="price" property="price"/>
+      </collection>
+  </resultMap>
+  <select id="selectMyOrderVO" parameterType="Map" resultMap="BaseResultMap">
+      SELECT
+            o.id as orderId,
+            o.created_time as createdTime,
+            o.pay_method as payMethod,
+            o.real_pay_amount as realPayAmount,
+            o.post_amount as postAmount,
+            os.order_status as orderStatus,
+            o.is_comment as isComment
+      from
+            orders o
+      left JOIN
+            order_status os
+      ON
+            o.id = os.order_id
+      WHERE
+            o.user_id = #{userId}
+      AND
+            o.is_delete = 0
+      <if test="orderStatus != null">
+            and os.order_status = #{orderStatus}
+      </if>
+      ORDER BY o.created_time ASC
+  </select>
+  <select id="getSubMyOrderVOs" resultType="top.seiei.pojo.vo.center.SubMyOrderVO" parameterType="String">
+      select
+        oi.item_img as itemImg,
+        oi.item_name as itemName,
+        oi.item_id as itemId,
+        oi.item_spec_name as itemSpecName,
+        oi.buy_counts as buyCounts,
+        oi.price as price
+      from
+      order_items oi
+      where order_id = #{orderId}
+  </select>
+</mapper>
