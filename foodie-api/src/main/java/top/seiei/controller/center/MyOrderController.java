@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 import top.seiei.controller.BaseController;
 import top.seiei.pojo.vo.PagedGridResult;
+import top.seiei.pojo.vo.center.OrderStatusCountsVO;
 import top.seiei.service.center.MyOrdereService;
 import top.seiei.utils.ServerResponse;
 
@@ -120,11 +121,50 @@ public class MyOrderController extends BaseController {
         return ServerResponse.createdBySuccess();
     }
 
+    /**
+     * 根据用户Id获取用户订单不同状态下的数量
+     * @param userId 用户主键
+     * @return
+     */
     @ApiOperation(value = "根据用户Id获取用户订单不同状态下的数量", notes = "根据用户Id获取用户订单不同状态下的数量", httpMethod = "POST")
     @PostMapping("/statusCounts")
-    public ServerResponse delete(
+    public ServerResponse getStatusCounts(
+            @ApiParam(name = "userId", value = "用户主键", required = true)
+            @RequestParam String userId
+    ) {
+        if (userId == null) {
+            return ServerResponse.createdByError("用户主键不能为空");
+        }
+        OrderStatusCountsVO orderStatusCountsVO = myOrdereService.getStatusCounts(userId);
+        return ServerResponse.createdBySuccess(orderStatusCountsVO);
+    }
+
+    /**
+     * 根据用户id获取订单动向
+     * @param userId 用户ID
+     * @param page 当前页数
+     * @param pageSize 一页显示条数
+     * @return
+     */
+    @ApiOperation(value = "根据用户id获取订单动向", notes = "根据用户id获取订单动向", httpMethod = "POST")
+    @PostMapping("/trend")
+    public ServerResponse getOrderTrend(
             @ApiParam(name = "userId", value = "用户主键", required = true)
             @RequestParam String userId,
+            @ApiParam(name = "page", value = "当前页数", required = true)
+            @RequestParam Integer page,
+            @ApiParam(name = "pageSize", value = "每页个数", required = true)
+            @RequestParam Integer pageSize
     ) {
+        if (userId == null) {
+            return ServerResponse.createdByError("用户主键不能为空");
+        }
+        page = page == null ? 1 : page;
+        pageSize = pageSize == null ? PAGE_SIZE : pageSize;
+        PagedGridResult pagedGridResult = myOrdereService.getOrderTrend(userId, page, pageSize);
+        return ServerResponse.createdBySuccess(pagedGridResult);
+    }
+
+
 
 }

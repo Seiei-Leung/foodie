@@ -2,6 +2,7 @@ package top.seiei.service.center;
 
 import top.seiei.pojo.Orders;
 import top.seiei.pojo.vo.PagedGridResult;
+import top.seiei.pojo.vo.center.OrderStatusCountsVO;
 import top.seiei.utils.ServerResponse;
 
 public interface MyOrdereService {
@@ -41,4 +42,20 @@ public interface MyOrdereService {
      * @param orderId 订单ID
      */
     public boolean deleteOrders(String orderId);
+
+    /**
+     * 根据用户ID 获取该用户不同订单状态的订单个数
+     * @param userId 用户Id
+     * @return
+     */
+    public OrderStatusCountsVO getStatusCounts(String userId);
+
+    /**
+     * 根据用户ID 获取分页的订单动向
+     * @param userId 用户ID
+     * @param page 当前页数
+     * @param pageSize 一页显示条数
+     * @return
+     */
+    public PagedGridResult getOrderTrend(String userId, Integer page, Integer pageSize);
 }

@@ -14,6 +14,8 @@ import top.seiei.pojo.OrderStatus;
 import top.seiei.pojo.Orders;
 import top.seiei.pojo.vo.center.MyOrderVO;
 import top.seiei.pojo.vo.PagedGridResult;
+import top.seiei.pojo.vo.center.OrderStatusCountsVO;
+import top.seiei.pojo.vo.center.OrderTrendVO;
 import top.seiei.service.BaseService;
 import top.seiei.service.center.MyOrdereService;
 import top.seiei.utils.ServerResponse;
@@ -104,5 +106,19 @@ public class MyOrdereServiceImpl extends BaseService implements MyOrdereService 
 
         int result = ordersMapper.updateByExampleSelective(orders, example);
         return result == 1;
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public OrderStatusCountsVO getStatusCounts(String userId) {
+        return ordersCustomMapper.getStatusCounts(userId);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public PagedGridResult getOrderTrend(String userId, Integer page, Integer pageSize) {
+        PageHelper.startPage(page, pageSize);
+        List<OrderTrendVO> result = ordersCustomMapper.getOrderTrend(userId);
+        return setPagedGridResult(result, page);
     }
 }

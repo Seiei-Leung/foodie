@@ -50,6 +50,8 @@ public class OrdersController {
 
         // todo 清除购物车相对应的商品数据
 
+
+
         // 发送信息到支付中心
         // 执行 post 逻辑
         Integer result = restTemplate.postForObject("http://localhost:8088/orders/notifyMerchantOrderPaid?orderId=" + orderId, null, Integer.class);

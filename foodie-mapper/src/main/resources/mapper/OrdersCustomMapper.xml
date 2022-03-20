@@ -61,4 +61,42 @@
       order_items oi
       where order_id = #{orderId}
   </select>
+  <select id="getStatusCounts" parameterType="String" resultType="top.seiei.pojo.vo.center.OrderStatusCountsVO">
+      select
+        sum(case when os.order_status = 10 then 1 else 0 end) as waitPayCounts,
+        sum(case when os.order_status = 20 then 1 else 0 end) as waitDeliverCounts,
+        sum(case when os.order_status = 30 then 1 else 0 end) as waitReceiveCounts,
+        sum(case when os.order_status = 40 and o.is_comment = 0 then 1 else 0 end) as waitCommentCounts
+      from
+        orders o
+      LEFT JOIN
+        order_status os
+      ON
+        o.id = os.order_id
+      WHERE
+        o.is_delete = 0
+        and
+        o.user_id = #{userId}
+  </select>
+  <select id="getOrderTrend" resultType="top.seiei.pojo.vo.center.OrderTrendVO" parameterType="String">
+      select
+        o.id as orderId,
+        os.order_status as orderStatus,
+        os.pay_time as payTime,
+        os.deliver_time as deliverTime,
+        os.success_time as successTime
+      from
+        orders o
+      LEFT JOIN
+        order_status os
+      ON
+        o.id = os.order_id
+      WHERE
+        is_delete = 0
+      AND
+        os.order_status in (20, 30, 40)
+      AND
+        o.user_id = #{userId}
+      order by o.id
+  </select>
 </mapper>
