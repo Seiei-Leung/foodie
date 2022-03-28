@@ -1,4 +1,7 @@
 ############################################################
+## 主配置文件
+#############################################################
+############################################################
 ## web访问端口号 约定：8088
 #############################################################
 server:
@@ -6,17 +9,15 @@ server:
   tomcat:
     uri-encoding: UTF-8
   max-http-header-size: 80KB
-
 ############################################################
 ## 配置数据源信息
 #############################################################
 spring:
+  profiles:
+    active: prod # 多环境配置，设置为 dev 时（开发环境），就会获取 application-dev.yml 挂载文件合并加载，同理选择 prod，就会加载 application-prod.yml
   datasource: # 数据源的相关配置
     type: com.zaxxer.hikari.HikariDataSource # 数据源类型：HikariCP
     driver-class-name: com.mysql.cj.jdbc.Driver # mysql驱动
-    url: jdbc:mysql://localhost:3306/foodie?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true&useUnicode=true&autoReconnect=true
-    username: root
-    password: 123456
     hikari:
       connection-timeout: 30000 # 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQLException，默认30秒
       minimum-idle: 5 # 最小连接数

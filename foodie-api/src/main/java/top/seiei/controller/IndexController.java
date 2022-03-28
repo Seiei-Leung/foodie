@@ -69,7 +69,7 @@ public class IndexController {
     }
 
     /**
-     * 根据以及分类Id 获取六个商品推荐
+     * 根据分类Id 获取六个商品推荐
      * @param rootCatId 父类主键
      * @return
      */

@@ -37,7 +37,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // windows 系统
         if (os.toLowerCase().startsWith("win")) {
             registry.addResourceHandler("/**").addResourceLocations("classpath:/META-INF/resources/") // 如果重写静态资源服务，则需要重新配置 Swagger2 映射
-                                                             .addResourceLocations("file:" + File.separator + fileUpload.getImageUserFaceLocation() + File.separator);
+                                                             .addResourceLocations("file:" + File.separator + fileUpload.getStaticImgPath() + File.separator);
+        }
+        // linux 系统
+        if (os.toLowerCase().startsWith("lin")) {
+            registry.addResourceHandler("/**").addResourceLocations("classpath:/META-INF/resources/") // 如果重写静态资源服务，则需要重新配置 Swagger2 映射
+                    .addResourceLocations("file:" + fileUpload.getStaticImgPath() + File.separator);
         }
     }
 }

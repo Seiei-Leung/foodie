@@ -24,7 +24,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  */
 @ComponentScan(basePackages = {"top.seiei", "org.n3r.idworker"})
 /**
- *
+ * 允许运行定时器
  */
 @EnableScheduling
 public class Application {

@@ -11,6 +11,12 @@
 
     <artifactId>foodie-api</artifactId>
 
+    <!--
+        打包使用 war 包（应用程序）
+        后续结合springcloud，所有的服务打包都会以jar的形式存在
+    -->
+    <packaging>war</packaging>
+
     <dependencies>
         <dependency>
             <groupId>top.seiei</groupId>
@@ -18,10 +24,32 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <!-- 单元测试 -->
+        <!--
+            <scope>test</scope> 表示依赖的组件仅仅参与测试代码的编译和执行，不会被打包
+        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- 热部署依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
+    <!-- 开启热部署 -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <!-- 开启热部署 -->
+                <configuration>
+                    <fork>true</fork>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -63,7 +63,7 @@ public class OrderServiceImpl implements OrderService {
         Integer realPayAmount = 0; // 实际支付总价格
         List<ShopCartVO> shopCartVOList = itemService.getItemsBySpecIds(itemSpecIds);
         for (ShopCartVO shopCartVO : shopCartVOList) {
-            // todo 总金额没有计算商品数量
+            // todo 总金额没有计算商品数量（后期结合 redius）
             Integer buyCounts = 2;
             totalAmount += shopCartVO.getPriceNormal() * buyCounts;
             realPayAmount += shopCartVO.getPriceDiscount() * buyCounts;

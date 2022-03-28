@@ -37,7 +37,9 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.1.5.RELEASE</version>
-        <!-- <relativePath/>设定一个空值默认值为../pom.xml 表示将始终从父级仓库中获取，不从本地路径获取 -->
+        <!--
+            <relativePath/>设定一个空值默认值为../pom.xml 表示将始终从父级仓库中获取，不从本地路径获取
+        -->
         <relativePath />
     </parent>
     <!--
@@ -57,7 +59,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-            <!-- 排除相应的默认日志 jar 包 -->
+            <!-- 排除相应的默认日志 jar 包，因为太臃肿 -->
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
@@ -69,6 +71,24 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <!-- 打包 war 时，需要移除SpringBoot自带tomcat包 -->
+<!--            <exclusions>
+                <exclusion>
+                    <groupId>spring-boot-starter-tomcat</groupId>
+                    <artifactId>org.springframework.boot</artifactId>
+                </exclusion>
+            </exclusions>-->
+        </dependency>
+        <!-- 当打包 war 移出了自带的 tomcat 包时，使用Maven install 项目就会报错（CookieUtils有使用） -->
+        <!-- 导入 java servlet 依赖 -->
+        <!--
+            <scope>provided</scope> 表示在编译和测试过程中有效，最后生成的war包时不会加入
+            例如:servlet-api，因为 servlet-api 依赖在 tomcat 服务器已经存在了，无需重新依赖
+            -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <!-- Spring 的 aop 模块 -->
         <dependency>
@@ -76,6 +96,9 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
         <!-- SpringBoot 配置解析默认只能解析yml文件，想要解析xml，properties 格式文件就需要使用这个依赖 -->
+        <!--
+            <optional>true</optional> 表示该依赖不会依赖传递
+        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>

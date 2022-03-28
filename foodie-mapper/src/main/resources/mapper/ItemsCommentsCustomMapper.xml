@@ -70,15 +70,17 @@
         ic.item_id as itemId,
         ic.item_name as itemName,
         ic.sepc_name as sepcName,
-        oi.item_img as itemImg
+        ii.url as itemImg
       FROM
         items_comments ic
       LEFT JOIN
-        order_items oi
+        items_img ii
       ON
-        ic.item_id = oi.item_id
+        ic.item_id = ii.item_id
       WHERE
         ic.user_id = #{userId}
+      and
+        ii.is_main = 1
       ORDER BY
         ic.created_time
   </select>
