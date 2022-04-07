@@ -193,6 +193,7 @@ public final class CookieUtils {
                 // 获取当前请求的一级域名
             	String domainName = getDomainName(request);
                 //logger.info("========== domainName: {} ==========", domainName);
+                // 不能跨域设置
                 if (!"localhost".equals(domainName)) {
                 	cookie.setDomain(domainName);
                 }
@@ -231,6 +232,7 @@ public final class CookieUtils {
                 // 设置 cookie 的域名属性
             	String domainName = getDomainName(request);
                 logger.info("========== domainName: {} ==========", domainName);
+                // 不能跨域设置
                 if (!"localhost".equals(domainName)) {
                 	cookie.setDomain(domainName);
                 }
@@ -247,7 +249,7 @@ public final class CookieUtils {
      * @param request request 对象
      * @return
      */
-    private static final String getDomainName(HttpServletRequest request) {
+    public static final String getDomainName(HttpServletRequest request) {
         String domainName = null;
         // 请求URL
         String serverName = request.getRequestURL().toString();

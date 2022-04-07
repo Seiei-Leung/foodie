@@ -122,15 +122,16 @@ public class PassportController {
             result = setNullProperty(result);
 
             // 配置Cookie
+
             CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(result), true);
 
             // todo 生产用户token，存入 redis 会话
             // todo 同步购物车数据（指的是前端 cookie 购物车信息的更新吗）
 
-            return ServerResponse.createdBySuccess(result);
+            return ServerResponse.createdBySuccess(CookieUtils.getDomainName(request));
         } catch (Exception e) {
             e.printStackTrace();
-            return ServerResponse.createdByError("使用MD5检验时发生错误");
+            return ServerResponse.createdByError("M5加密出错!!!");
         }
     }
 

@@ -72,12 +72,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <!-- 打包 war 时，需要移除SpringBoot自带tomcat包 -->
-<!--            <exclusions>
+            <exclusions>
                 <exclusion>
                     <groupId>spring-boot-starter-tomcat</groupId>
                     <artifactId>org.springframework.boot</artifactId>
                 </exclusion>
-            </exclusions>-->
+            </exclusions>
         </dependency>
         <!-- 当打包 war 移出了自带的 tomcat 包时，使用Maven install 项目就会报错（CookieUtils有使用） -->
         <!-- 导入 java servlet 依赖 -->
