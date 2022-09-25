@@ -1,7 +1,6 @@
 package top.seiei.service.impl;
 
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +11,7 @@ import top.seiei.pojo.ItemsImg;
 import top.seiei.pojo.ItemsParam;
 import top.seiei.pojo.ItemsSpec;
 import top.seiei.pojo.vo.CommentLevelCountsVO;
-import top.seiei.pojo.vo.PagedGridResult;
+import top.seiei.utils.PagedGridResult;
 import top.seiei.pojo.vo.SearchItemsVO;
 import top.seiei.pojo.vo.ShopCartVO;
 import top.seiei.service.BaseService;

@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiParam;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import top.seiei.controller.BaseController;
 import top.seiei.pojo.Users;
 import top.seiei.pojo.bo.center.CenterUserBO;
+import top.seiei.pojo.vo.UserVO;
 import top.seiei.resource.FileUpload;
 import top.seiei.service.center.CenterUserService;
 import top.seiei.utils.CookieUtils;
@@ -74,9 +76,15 @@ public class CenterUserController extends BaseController {
             }
             return ServerResponse.createdByError(errorObj);
         }
+        // 更新数据
+        Users user = setNullProperty(centerUserService.updateUserInfo(userId, centerUserBO));
+
         // 更新 cookie
-        Users users = setNullProperty(centerUserService.updateUserInfo(userId, centerUserBO));
-        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(users), true);
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(user, userVO);
+        String userUniqueToken = JsonUtils.jsonToPojo(CookieUtils.getCookieValue(request, "user", true), UserVO.class).getUserUniqueToken();
+        userVO.setUserUniqueToken(userUniqueToken);
+        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(userVO), true);
 
         return ServerResponse.createdBySuccess();
     }
@@ -122,9 +130,15 @@ public class CenterUserController extends BaseController {
                 // 这里直接传入 saveFile 会报错
                 pictureFile.transferTo(new File(saveFile.getAbsolutePath()));
                 // 更新数据库，url 最后添加时间戳防止浏览器缓存
-                Users users = centerUserService.updateUserFace(userId, fileUpload.getImageUserFaceUrl() + userId + "/" + newFileName + "?t=" + DateUtil.getCurrentDateString(DateUtil.DATE_PATTERN));
-                users = this.setNullProperty(users);
-                CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(users), true);
+                Users user = centerUserService.updateUserFace(userId, fileUpload.getImageUserFaceUrl() + userId + "/" + newFileName + "?t=" + DateUtil.getCurrentDateString(DateUtil.DATE_PATTERN));
+                user = this.setNullProperty(user);
+
+                // 更新 cookie
+                UserVO userVO = new UserVO();
+                BeanUtils.copyProperties(user, userVO);
+                String userUniqueToken = JsonUtils.jsonToPojo(CookieUtils.getCookieValue(request, "user", true), UserVO.class).getUserUniqueToken();
+                userVO.setUserUniqueToken(userUniqueToken);
+                CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(userVO), true);
             } catch (IOException e) {
                 e.printStackTrace();
                 return ServerResponse.createdByError("保存文件时出错了！！");

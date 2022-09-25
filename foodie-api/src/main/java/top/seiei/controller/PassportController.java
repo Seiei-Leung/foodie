@@ -5,29 +5,40 @@ import io.swagger.annotations.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import top.seiei.pojo.Users;
+import top.seiei.pojo.bo.ShopCartBO;
 import top.seiei.pojo.bo.UserBO;
+import top.seiei.pojo.vo.UserVO;
 import top.seiei.service.UsersService;
 import top.seiei.utils.CookieUtils;
 import top.seiei.utils.JsonUtils;
+import top.seiei.utils.RedisOperator;
 import top.seiei.utils.ServerResponse;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 // 使用 @ApiIgnore 注释，可以使 Swagger2 生产文档时忽略该 controller
 //@ApiIgnore
 @Api(value = "注册登录模块", tags = {"用于注册登录的相关接口"})
 @RestController
 @RequestMapping("passport")
-public class PassportController {
+public class PassportController extends BaseController{
 
     final static Logger logger = LoggerFactory.getLogger(PassportController.class);
 
     @Resource
     private UsersService usersService;
+
+    @Autowired
+    private RedisOperator redisOperator;
 
     /**
      * 检查用户名是否重复
@@ -82,17 +93,25 @@ public class PassportController {
         try {
             Users user = usersService.createUser(userBO);
             // 脱敏逻辑
-            user = setNullProperty(user);
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(user, userVO);
+
+            // 同步购物车
+            sycnShopCart(request, response, user.getId());
+
+            // 生产用户token，存入 redis 会话
+            String token = UUID.randomUUID().toString();
+            redisOperator.set(REDIS_USER_TOKEN + ":" + user.getId(), token);
+            userVO.setUserUniqueToken(token);
+
             // 配置Cookie
-            CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(user), true);
+            CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(userVO), true);
+
+            return ServerResponse.createdBySuccess(user);
         } catch (Exception e) {
             e.printStackTrace();
             return ServerResponse.createdByError("保存信息时发生错误");
         }
-        // todo 生产用户token，存入 redis 会话
-        // todo 同步购物车数据（指的是前端 cookie 购物车信息的更新吗）
-
-        return ServerResponse.createdBySuccess();
     }
 
     /**
@@ -119,16 +138,20 @@ public class PassportController {
                 return ServerResponse.createdByError("用户名和密码不匹配！");
             }
             // 脱敏逻辑
-            result = setNullProperty(result);
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(result, userVO);
+
+            // 生成用户token，存入 redis 会话
+            String token = UUID.randomUUID().toString();
+            redisOperator.set(REDIS_USER_TOKEN + ":" + result.getId(), token);
+            userVO.setUserUniqueToken(token);
 
             // 配置Cookie
+            CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(userVO), true);
 
-            CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(result), true);
-
-            // todo 生产用户token，存入 redis 会话
-            // todo 同步购物车数据（指的是前端 cookie 购物车信息的更新吗）
-
-            return ServerResponse.createdBySuccess(CookieUtils.getDomainName(request));
+            // 同步购物车
+            sycnShopCart(request, response, result.getId());
+            return ServerResponse.createdBySuccess(userVO);
         } catch (Exception e) {
             e.printStackTrace();
             return ServerResponse.createdByError("M5加密出错!!!");
@@ -151,24 +174,63 @@ public class PassportController {
     public ServerResponse logout(HttpServletRequest request, HttpServletResponse response,@RequestParam String userId) {
         // 清空Cookies信息
         CookieUtils.deleteCookie(request, response, "user");
+        CookieUtils.deleteCookie(request, response, "shopcart");
 
+        // 清空 Redis token
+        redisOperator.del(REDIS_USER_TOKEN + ":" + userId);
         return ServerResponse.createdBySuccess();
     }
 
     /**
-     * 脱敏逻辑
-     * @param users 用户
-     * @return
+     * 同步 Cookie 和 Redis 的购物车信息
+     * @param request request 对象
+     * @param response response 对象
+     * @param userId 用户 Id
      */
-    private Users setNullProperty(Users users)
-    {
-        users.setPassword(null);
-        users.setMobile(null);
-        users.setEmail(null);
-        users.setBirthday(null);
-        users.setCreatedTime(null);
-        users.setUpdatedTime(null);
-        return users;
-    }
+    private void sycnShopCart(HttpServletRequest request, HttpServletResponse response,  String userId) {
+        List<ShopCartBO> shopCartBOListOfCookie = new ArrayList<>();
+        List<ShopCartBO> shopCartBOListOfRedis = new ArrayList<>();
+        String strOfCookie  = CookieUtils.getCookieValue(request, "shopcart", true);
+        String strOfRedis = redisOperator.get("shopCart:" + userId);
 
+        if (StringUtils.isNotBlank(strOfRedis)) {
+            shopCartBOListOfRedis = JsonUtils.jsonToList(strOfRedis, ShopCartBO.class);
+        }
+        if (StringUtils.isNotBlank(strOfCookie)) {
+            shopCartBOListOfCookie = JsonUtils.jsonToList(strOfCookie, ShopCartBO.class);
+        }
+
+        if (shopCartBOListOfRedis.size() != 0) {
+            // 如果 redis 有数据，cookie没有数据，则将 redis 的数据同步到 cookie 中
+            if (shopCartBOListOfCookie.size() == 0) {
+                CookieUtils.setCookie(request, response, "shopcart", strOfRedis, true);
+            }
+            // 如果 redis 有数据，cookie有数据，则将 cookie 的数据添加到 redis 中
+            // 商品数量取 cookie 的值
+            else {
+
+                for (ShopCartBO itemOfCookie : shopCartBOListOfCookie) {
+                    String specIdOfCookie = itemOfCookie.getSpecId();
+                    Boolean isExist = false; // 在 redis 购物车是否存在该商品信息
+                    for (ShopCartBO itemOfRedis : shopCartBOListOfRedis) {
+                        String specIdOfRedis = itemOfRedis.getSpecId();
+                        if (specIdOfCookie.equals(specIdOfRedis)) {
+                            itemOfRedis.setBuyCounts(itemOfCookie.getBuyCounts());
+                            isExist = true;
+                            break;
+                        }
+                    }
+                    if (!isExist) {
+                        shopCartBOListOfRedis.add(itemOfCookie);
+                    }
+                }
+                redisOperator.set("shopCart:" + userId, JsonUtils.objectToJson(shopCartBOListOfRedis));
+            }
+        } else {
+            // 如果 redis 没有数据，cookie 有数据，则将 cookie 的数据同步到 redis 中
+            if (shopCartBOListOfCookie.size() != 0) {
+                redisOperator.set("shopCart:" + userId, strOfCookie);
+            }
+        }
+    }
 }

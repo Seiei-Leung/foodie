@@ -1,8 +1,6 @@
 package top.seiei.service.impl;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import top.seiei.mapper.TestMapper;
 import top.seiei.pojo.Test;
 import top.seiei.service.TestObjService;

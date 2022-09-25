@@ -38,6 +38,18 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
+        <!--
+            引入 SpringSession 依赖，之所以添加在这里而不是添加在父级项目
+            是因为后期添加的其它与 Redis 无关的自启动项目时，会要求该项目添加 Redis 连接配置，否则报错
+             -->
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
     </dependencies>
     <!-- 开启热部署 -->
     <build>

@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 import top.seiei.controller.BaseController;
-import top.seiei.pojo.vo.PagedGridResult;
+import top.seiei.utils.PagedGridResult;
 import top.seiei.pojo.vo.center.OrderStatusCountsVO;
 import top.seiei.service.center.MyOrdereService;
 import top.seiei.utils.ServerResponse;

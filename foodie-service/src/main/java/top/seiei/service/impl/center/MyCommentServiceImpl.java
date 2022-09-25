@@ -14,7 +14,7 @@ import top.seiei.pojo.OrderItems;
 import top.seiei.pojo.OrderStatus;
 import top.seiei.pojo.Orders;
 import top.seiei.pojo.bo.center.OrderItemsCommentVO;
-import top.seiei.pojo.vo.PagedGridResult;
+import top.seiei.utils.PagedGridResult;
 import top.seiei.pojo.vo.center.MyCommentVO;
 import top.seiei.service.BaseService;
 import top.seiei.service.center.MyCommentService;

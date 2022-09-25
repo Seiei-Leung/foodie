@@ -6,3 +6,24 @@ spring:
     url: jdbc:mysql://localhost:3306/foodie?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true&useUnicode=true&autoReconnect=true
     username: root
     password: 123456
+  redis:
+    #单主机模式
+    host: 192.168.220.128
+    port: 6379
+    password: 123456
+    database: 0 # 使用索引为0 的数据库
+
+#    哨兵模式
+#    database: 0
+#    password: 123456
+#    sentinel:
+#      # 在哨兵配置文件中设定 Master 昵称
+#      master: seieiMaster
+#      # 所有哨兵对应的地址及端口
+#      nodes: 192.168.253.4:26379,192.168.253.5:26379,192.168.253.6:26379
+
+#    集群模式
+#    password: 123456
+#    cluster:
+       # 所有 Redis 地址及端口
+#      nodes:  192.168.253.4:6379,192.168.253.5:6379,192.168.253.6:6379,192.168.253.7:6379,192.168.253.8:6379,192.168.253.10:6379

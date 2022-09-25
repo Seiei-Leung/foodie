@@ -1,7 +1,7 @@
 package top.seiei.service;
 
 import top.seiei.pojo.vo.CommentVO;
-import top.seiei.pojo.vo.PagedGridResult;
+import top.seiei.utils.PagedGridResult;
 
 import java.util.List;
 

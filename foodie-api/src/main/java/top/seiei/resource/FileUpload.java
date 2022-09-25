@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 // 指定资源文件所在的地址，resources 资源文件在打包之后，其所有文件都会存放在 classpath 中
 @PropertySource("classpath:file-upload-prod.properties")
 // 定义属性前缀
+// 单独使用@ConfigurationProperties（不使用@PropertySource），
+// 即默认地将 application.properties 和 application.yml 配置文件属性转化为 bean 对象使用
 @ConfigurationProperties(prefix = "file")
 public class FileUpload {
 

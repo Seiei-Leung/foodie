@@ -8,7 +8,7 @@ import top.seiei.controller.BaseController;
 import top.seiei.enums.YesOrNo;
 import top.seiei.pojo.Orders;
 import top.seiei.pojo.bo.center.OrderItemsCommentVO;
-import top.seiei.pojo.vo.PagedGridResult;
+import top.seiei.utils.PagedGridResult;
 import top.seiei.service.center.MyCommentService;
 import top.seiei.service.center.MyOrdereService;
 import top.seiei.utils.ServerResponse;

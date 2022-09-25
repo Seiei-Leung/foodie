@@ -4,23 +4,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import top.seiei.pojo.Users;
-import top.seiei.pojo.bo.center.CenterUserBO;
 import top.seiei.service.center.CenterUserService;
-import top.seiei.utils.CookieUtils;
-import top.seiei.utils.JsonUtils;
 import top.seiei.utils.ServerResponse;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Api(value = "用户中心首页模块", tags = {"用于用户中心首页模块的相关接口"})
 @RestController

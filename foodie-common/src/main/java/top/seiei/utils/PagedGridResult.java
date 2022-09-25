@@ -1,4 +1,4 @@
-package top.seiei.pojo.vo;
+package top.seiei.utils;
 
 public class PagedGridResult<T> {
 

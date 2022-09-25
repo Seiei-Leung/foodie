@@ -2,7 +2,7 @@ package top.seiei.service.center;
 
 import top.seiei.pojo.OrderItems;
 import top.seiei.pojo.bo.center.OrderItemsCommentVO;
-import top.seiei.pojo.vo.PagedGridResult;
+import top.seiei.utils.PagedGridResult;
 
 import java.util.List;
 

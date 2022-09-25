@@ -1,0 +1,51 @@
+server:
+  port: 8066
+  tomcat:
+    uri-encoding: UTF-8
+  max-http-header-size: 80KB
+spring:
+  # 这里配置数据库的原因是：该 search 项目是附属、依赖 foodie 项目，有一些相应的依赖是在 foodie 项目上设置的
+  # 而 foodie 项目需要有这个数据库配置，尽管 search 项目用不到
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/foodie?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true&useUnicode=true&autoReconnect=true
+    username: root
+    password: 123456
+    hikari:
+      connection-timeout: 30000 # 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQLException，默认30秒
+      minimum-idle: 5 # 最小连接数
+      maximum-pool-size: 20 # 最大连接数
+      auto-commit: true # 自动提交
+      idle-timeout: 600000 # 连接超时的最大时长（毫秒），超时则被释放（retired），默认:10分钟
+      pool-name: DateSourceHikariCP # 连接池名字
+      max-lifetime: 1800000 # 连接的生命时长（毫秒），超时而且没被使用则被释放（retired），默认:30分钟
+      connection-test-query: SELECT 1
+  servlet:
+    multipart:
+      max-file-size: 512000 # 文件上传大小设置为 500 kb
+      max-request-size: 512000 # 请求大小设置为 500 kb
+mybatis:
+  type-aliases-package: top.seiei.pojo # 所有POJO类所在包路径
+  mapper-locations: classpath:mapper/*.xml # mapper映射文件
+mapper:
+  mappers: top.seiei.my.mapper.MyMapper
+  not-empty: false # 在进行数据库操作的时候，判断表达式 userName != null 时，是否追加判断 userName != ''
+  identity: MYSQL
+pagehelper:
+  helper-dialect: mysql # 数据库方言
+  support-methods-arguments: true # 是否支持分页的参数传参
+############################################################
+## Fastdfs 配置
+#############################################################
+fdfs:
+  connect-timeout: 5000 # 连接的超时时间
+  so-timeout: 10000 # 读取的超时时间
+  tracker-list: 192.168.220.128:22122 # tracker 服务所在IP地址
+  pool:
+    #连接池 maxTotal
+    max-total: 200
+    #连接池 maxTotalPerKey
+    max-total-per-key: 200
+    #连接池 maxIdlePerKey 最大空闲连接数(影响并发性能)
+    max-idle-per-key: 50

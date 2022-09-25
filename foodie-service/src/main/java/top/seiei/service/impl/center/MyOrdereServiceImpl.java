@@ -13,7 +13,7 @@ import top.seiei.mapper.OrdersMapper;
 import top.seiei.pojo.OrderStatus;
 import top.seiei.pojo.Orders;
 import top.seiei.pojo.vo.center.MyOrderVO;
-import top.seiei.pojo.vo.PagedGridResult;
+import top.seiei.utils.PagedGridResult;
 import top.seiei.pojo.vo.center.OrderStatusCountsVO;
 import top.seiei.pojo.vo.center.OrderTrendVO;
 import top.seiei.service.BaseService;

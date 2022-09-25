@@ -1,7 +1,7 @@
 package top.seiei.service.center;
 
 import top.seiei.pojo.Orders;
-import top.seiei.pojo.vo.PagedGridResult;
+import top.seiei.utils.PagedGridResult;
 import top.seiei.pojo.vo.center.OrderStatusCountsVO;
 import top.seiei.utils.ServerResponse;
 

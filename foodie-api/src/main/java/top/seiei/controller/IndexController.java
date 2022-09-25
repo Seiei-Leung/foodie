@@ -1,6 +1,8 @@
 package top.seiei.controller;
 
 import io.swagger.annotations.*;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,9 +14,12 @@ import top.seiei.pojo.vo.CategoryVO;
 import top.seiei.pojo.vo.NewItemsVO;
 import top.seiei.service.CarouselService;
 import top.seiei.service.CategoryService;
+import top.seiei.utils.JsonUtils;
+import top.seiei.utils.RedisOperator;
 import top.seiei.utils.ServerResponse;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -29,6 +34,9 @@ public class IndexController {
     @Resource
     private CategoryService categoryService;
 
+    @Autowired
+    private RedisOperator redisOperator;
+
     /**
      * 首页获取轮播图信息列表
      * @return
@@ -36,7 +44,18 @@ public class IndexController {
     @ApiOperation(value = "首页获取轮播图信息列表", notes = "首页获取轮播图信息列表", httpMethod = "GET")
     @GetMapping("/carousel")
     public ServerResponse getCarousel() {
-        List<Carousel> result = carouselService.getAll(YesOrNo.Yes.type);
+        List<Carousel> result = new ArrayList<>();
+        // 从 Redis 获取轮播图信息
+        String resultStrFromRedis = redisOperator.get("carousel");
+        if (StringUtils.isNotBlank(resultStrFromRedis)) {
+            // Json 转化为对象列表
+            result = JsonUtils.jsonToList(resultStrFromRedis, Carousel.class);
+        } else {
+            // 如果 redis 没有对应的数据，即从数据库中获取
+            result = carouselService.getAll(YesOrNo.Yes.type);
+            // 获取到的数据存入 redis 中
+            redisOperator.set("carousel", JsonUtils.objectToJson(result));
+        }
         return ServerResponse.createdBySuccess(result);
     }
 
@@ -47,7 +66,16 @@ public class IndexController {
     @ApiOperation(value = "获取顶级级别的大分类", notes = "首页获取顶级级别的大分类", httpMethod = "GET")
     @GetMapping("/cats")
     public ServerResponse getRootLevelCategory() {
-        List<Category> result = categoryService.getRootLevelCategory();
+        List<Category> result = new ArrayList<>();
+        // 从 Redis 获取大分类信息
+        String resultStrFromRedis = redisOperator.get("cats");
+        if (StringUtils.isNotBlank(resultStrFromRedis)) {
+            result = JsonUtils.jsonToList(resultStrFromRedis, Category.class);
+        } else {
+            result = categoryService.getRootLevelCategory();
+            // 这里注意缓存穿透的问题
+            redisOperator.set("cats", JsonUtils.objectToJson(result));
+        }
         return ServerResponse.createdBySuccess(result);
     }
 
@@ -64,7 +92,16 @@ public class IndexController {
         if (rootCatId == null) {
             return ServerResponse.createdByError("参数不能为空");
         }
-        List<CategoryVO> result = categoryService.getSubCategoryList(rootCatId);
+        // 从 Redis 获取分类信息
+        List<CategoryVO> result = new ArrayList<>();
+        String resultStrFromRedis = redisOperator.get("subCat:" + rootCatId);
+        if (StringUtils.isNotBlank(resultStrFromRedis)) {
+            result = JsonUtils.jsonToList(resultStrFromRedis, CategoryVO.class);
+        } else {
+            result = categoryService.getSubCategoryList(rootCatId);
+            // 这里注意缓存穿透的问题
+            redisOperator.set("subCat:" + rootCatId, JsonUtils.objectToJson(result));
+        }
         return ServerResponse.createdBySuccess(result);
     }
 

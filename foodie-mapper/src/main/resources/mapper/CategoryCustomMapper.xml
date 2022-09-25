@@ -14,7 +14,7 @@
     </collection>
   </resultMap>
   <!--
-    可以直接使用 resultType="top.seiei.pojo.vo.CategoryVO"
+    可以直接使用 resultType="CategoryVO"
   -->
   <select id="getSubCategoryList" resultMap="CategoryVOMap" parameterType="Integer">
     select

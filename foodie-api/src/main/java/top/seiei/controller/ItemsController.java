@@ -12,6 +12,7 @@ import top.seiei.pojo.ItemsSpec;
 import top.seiei.pojo.vo.*;
 import top.seiei.service.ItemService;
 import top.seiei.service.ItemsCommentsService;
+import top.seiei.utils.PagedGridResult;
 import top.seiei.utils.ServerResponse;
 
 import javax.annotation.Resource;
@@ -113,7 +114,7 @@ public class ItemsController extends BaseController{
     @ApiOperation(value = "根据关键词获取商品列表", httpMethod = "GET")
     @GetMapping("/search")
     public ServerResponse searchItems(
-            @ApiParam(name = "keywords", value = "商品关键词", required = true, example = "cake-1001")
+            @ApiParam(name = "keywords", value = "商品关键词", required = true, example = "好吃")
             @RequestParam String keywords,
             @ApiParam(name = "sort", value = "排序类型", required = false, example = "1")
             @RequestParam(required = false) String sort,

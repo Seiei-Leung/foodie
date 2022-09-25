@@ -1,0 +1,22 @@
+server:
+  port: 8083
+  tomcat:
+    uri-encoding: UTF-8
+  max-http-header-size: 80KB
+spring:
+  # 这里配置数据库的原因是：该 search 项目是附属、依赖 foodie 项目，有一些相应的依赖是在 foodie 项目上设置的
+  # 而 foodie 项目需要有这个数据库配置，尽管 search 项目用不到
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/foodie?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true&useUnicode=true&autoReconnect=true
+    username: root
+    password: 123456
+  data:
+    elasticsearch:
+      # 集群名称
+      cluster-name: seiei-elasticsearch
+      # 地址，注意在 java 调用 ES 客户端端口是 9300 而不是 9200
+      cluster-nodes: 192.168.220.128:9300
+      # 集群设置
+      # cluster-nodes: 192.168.253.4:9300, 192.168.253.5:9300, 192.168.253.6:9300
